@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔥 CHARADÃO - Favoritos</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #4c1d95, #000000, #831843);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── Cabeçalho ── */
+        .cabecalho {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 22px 20px 18px;
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .btn-voltar {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background 0.2s;
+            flex-shrink: 0;
+        }
+
+        .btn-voltar:hover { background: rgba(255,255,255,0.18); }
+
+        .cabecalho-centro {
+            text-align: center;
+            flex: 1;
+        }
+
+        .cabecalho-centro h1 { font-size: 1.25rem; font-weight: 700; }
+
+        .cabecalho-centro p {
+            font-size: 0.72rem;
+            color: #a78bfa;
+            margin-top: 2px;
+        }
+
+        .btn-limpar-tudo {
+            background: rgba(220,38,38,0.15);
+            border: 1px solid rgba(220,38,38,0.35);
+            color: #fca5a5;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 8px 13px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background 0.2s;
+            flex-shrink: 0;
+        }
+
+        .btn-limpar-tudo:hover { background: rgba(220,38,38,0.28); }
+
+        /* ── Conteúdo ── */
+        .conteudo {
+            flex: 1;
+            max-width: 600px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 26px 18px 50px;
+        }
+
+        /* ── Filtros ── */
+        .filtros {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 22px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+            scrollbar-width: none;
+        }
+
+        .filtros::-webkit-scrollbar { display: none; }
+
+        .btn-filtro {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: #c4b5fd;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .btn-filtro:hover { background: rgba(255,255,255,0.14); }
+
+        .btn-filtro.ativo {
+            background: linear-gradient(135deg, #ff00aa, #c026d3);
+            border-color: transparent;
+            color: white;
+        }
+
+        /* ── Contador ── */
+        .contador {
+            font-size: 0.78rem;
+            color: #7c3aed;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .contador hr {
+            flex: 1;
+            border: none;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+
+        /* ── Lista ── */
+        .lista-favoritos {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        /* ── Card favorito ── */
+        .card-favorito {
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 22px;
+            padding: 20px 20px 16px;
+            transition: background 0.2s;
+            animation: surgir 0.3s ease forwards;
+            opacity: 0;
+        }
+
+        @keyframes surgir {
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .card-favorito:hover { background: rgba(255,255,255,0.1); }
+
+        .card-topo {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .badge-categoria {
+            background: rgba(192,38,211,0.2);
+            border: 1px solid rgba(192,38,211,0.35);
+            color: #e879f9;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 50px;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .btn-remover {
+            background: rgba(220,38,38,0.12);
+            border: 1px solid rgba(220,38,38,0.25);
+            color: #fca5a5;
+            font-size: 0.9rem;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .btn-remover:hover {
+            background: rgba(220,38,38,0.28);
+            transform: scale(1.1);
+        }
+
+        .texto-pergunta-fav {
+            font-size: 1rem;
+            font-weight: 600;
+            line-height: 1.55;
+            margin-bottom: 14px;
+        }
+
+        /* Resposta expansível */
+        .area-resposta {
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.35s ease;
+        }
+
+        .area-resposta.aberta { max-height: 200px; }
+
+        .resposta-interna {
+            padding-top: 14px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .label-resp {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: #34d399;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .texto-resposta-fav {
+            font-size: 0.95rem;
+            font-weight: 700;
+            background: rgba(52,211,153,0.1);
+            border: 1px solid rgba(52,211,153,0.25);
+            border-radius: 12px;
+            padding: 12px 16px;
+        }
+
+        .btn-revelar-fav {
+            width: 100%;
+            margin-top: 12px;
+            padding: 11px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.13);
+            border-radius: 12px;
+            color: #c4b5fd;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-revelar-fav:hover { background: rgba(255,255,255,0.12); color: white; }
+
+        /* ── Tela vazia ── */
+        .tela-vazia {
+            text-align: center;
+            padding: 70px 20px;
+        }
+
+        .icone-vazio {
+            font-size: 4.5rem;
+            margin-bottom: 18px;
+            display: block;
+            animation: pulsar 2s ease-in-out infinite;
+        }
+
+        @keyframes pulsar {
+            0%,100% { transform: scale(1); }
+            50%      { transform: scale(1.1); }
+        }
+
+        .tela-vazia h2 { font-size: 1.5rem; margin-bottom: 12px; }
+
+        .tela-vazia p {
+            color: #a78bfa;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn-ir-jogar {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 30px;
+            background: linear-gradient(135deg, #ff00aa, #c026d3);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(255,0,170,0.35);
+            transition: transform 0.2s;
+        }
+
+        .btn-ir-jogar:hover { transform: translateY(-2px); }
+
+        /* Sem resultados no filtro */
+        .sem-resultados {
+            text-align: center;
+            padding: 50px 20px;
+            color: #7c3aed;
+            font-size: 0.95rem;
+        }
+
+        .sem-resultados span { font-size: 2.5rem; display: block; margin-bottom: 12px; }
+
+        /* ── Modal ── */
+        .modal-fundo {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 100;
+        }
+
+        .modal-fundo.ativo { display: flex; }
+
+        .modal-box {
+            background: linear-gradient(135deg, #1e1b4b, #4a044e);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 28px;
+            padding: 34px 26px;
+            max-width: 340px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .modal-box h2 { font-size: 1.3rem; margin-bottom: 10px; }
+
+        .modal-box p {
+            color: #c4b5fd;
+            font-size: 0.9rem;
+            margin-bottom: 26px;
+            line-height: 1.5;
+        }
+
+        .modal-botoes { display: flex; gap: 10px; }
+
+        .btn-cancelar {
+            flex: 1; padding: 14px;
+            background: rgba(255,255,255,0.08);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.18);
+            border-radius: 14px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem; font-weight: 600; cursor: pointer;
+        }
+
+        .btn-confirmar {
+            flex: 1; padding: 14px;
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            color: white; border: none; border-radius: 14px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem; font-weight: 700; cursor: pointer;
+        }
+
+        /* ── Toast ── */
+        .toast {
+            position: fixed;
+            bottom: 28px;
+            left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: rgba(20,10,50,0.96);
+            border: 1px solid rgba(255,0,170,0.35);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            z-index: 500;
+            transition: transform 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .toast.visivel { transform: translateX(-50%) translateY(0); }
+
+        @media (max-width: 380px) {
+            .texto-pergunta-fav { font-size: 0.92rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Cabeçalho -->
+    <div class="cabecalho">
+        <button class="btn-voltar" onclick="window.location.href='principal.html'">← Voltar</button>
+        <div class="cabecalho-centro">
+            <h1>❤️ Favoritos</h1>
+            <p id="subtitulo-cab">Suas charadas preferidas</p>
+        </div>
+        <button class="btn-limpar-tudo" onclick="abrirModal()">🗑 Limpar</button>
+    </div>
+
+    <!-- Conteúdo -->
+    <div class="conteudo">
+        <div class="filtros" id="filtros"></div>
+        <div class="contador">
+            <span id="texto-contador">0 charadas</span>
+            <hr>
+        </div>
+        <div class="lista-favoritos" id="lista"></div>
+    </div>
+
+    <!-- Modal limpar -->
+    <div class="modal-fundo" id="modal" onclick="fecharSeForaDoBox(event)">
+        <div class="modal-box">
+            <h2>💔 Limpar favoritos?</h2>
+            <p>Todas as suas charadas favoritas serão removidas permanentemente!</p>
+            <div class="modal-botoes">
+                <button class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
+                <button class="btn-confirmar" onclick="limparTodos()">Apagar tudo</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        let favoritos   = [];
+        let filtroAtivo = 'todos';
+
+        // ── Inicialização ──
+        window.onload = function () {
+            if (!localStorage.getItem('charadaoNome')) {
+                window.location.href = 'index.html';
+                return;
+            }
+            carregar();
+        };
+
+        function carregar() {
+            favoritos   = JSON.parse(localStorage.getItem('charadaoFavoritos')) || [];
+            filtroAtivo = 'todos';
+            renderizarFiltros();
+            renderizarLista();
+        }
+
+        // ── Filtros ──
+        function renderizarFiltros() {
+            const container = document.getElementById('filtros');
+            container.innerHTML = '';
+
+            const cats = ['todos', ...new Set(favoritos.map(f => f.categoria || 'Geral'))];
+
+            cats.forEach(cat => {
+                const qtd = cat === 'todos'
+                    ? favoritos.length
+                    : favoritos.filter(f => (f.categoria || 'Geral') === cat).length;
+
+                const btn = document.createElement('button');
+                btn.className = 'btn-filtro' + (cat === filtroAtivo ? ' ativo' : '');
+                btn.textContent = (cat === 'todos' ? '✨ Todos' : cat) + ' (' + qtd + ')';
+                btn.onclick = () => {
+                    filtroAtivo = cat;
+                    renderizarFiltros();
+                    renderizarLista();
+                };
+                container.appendChild(btn);
+            });
+        }
+
+        // ── Lista ──
+        function renderizarLista() {
+            const lista = document.getElementById('lista');
+            lista.innerHTML = '';
+
+            const filtrados = filtroAtivo === 'todos'
+                ? favoritos
+                : favoritos.filter(f => (f.categoria || 'Geral') === filtroAtivo);
+
+            // Subtítulo do cabeçalho
+            document.getElementById('subtitulo-cab').textContent =
+                favoritos.length === 0
+                    ? 'Nenhuma charada salva ainda'
+                    : favoritos.length + (favoritos.length === 1 ? ' charada salva' : ' charadas salvas');
+
+            // Contador
+            document.getElementById('texto-contador').textContent =
+                filtrados.length + (filtrados.length === 1 ? ' charada' : ' charadas') +
+                (filtroAtivo !== 'todos' ? ' em "' + filtroAtivo + '"' : ' salvas no total');
+
+            // Tela vazia geral
+            if (favoritos.length === 0) {
+                lista.innerHTML = `
+                    <div class="tela-vazia">
+                        <span class="icone-vazio">🤍</span>
+                        <h2>Nenhum favorito ainda!</h2>
+                        <p>Durante o jogo toque no coração 🤍 ao lado do número da charada para salvá-la aqui.</p>
+                        <button class="btn-ir-jogar" onclick="window.location.href='categorias.html'">
+                            ⚡ Ir jogar agora
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            // Sem resultados no filtro selecionado
+            if (filtrados.length === 0) {
+                lista.innerHTML = `
+                    <div class="sem-resultados">
+                        <span>🔍</span>
+                        Nenhum favorito nesta categoria ainda.
+                    </div>
+                `;
+                return;
+            }
+
+            // Renderizar cada card
+            filtrados.forEach((fav, idx) => {
+                const idxReal = favoritos.findIndex(f => f.p === fav.p && f.r === fav.r);
+
+                const card = document.createElement('div');
+                card.className = 'card-favorito';
+                card.style.animationDelay = (idx * 0.05) + 's';
+
+                card.innerHTML = `
+                    <div class="card-topo">
+                        <span class="badge-categoria">${fav.categoria || 'Geral'}</span>
+                        <button class="btn-remover" onclick="remover(${idxReal})" title="Remover dos favoritos">✕</button>
+                    </div>
+                    <p class="texto-pergunta-fav">${fav.p}</p>
+                    <button class="btn-revelar-fav" id="btn-${idx}" onclick="toggleResp(${idx})">
+                        👀 Ver resposta
+                    </button>
+                    <div class="area-resposta" id="area-${idx}">
+                        <div class="resposta-interna">
+                            <p class="label-resp">✅ RESPOSTA</p>
+                            <p class="texto-resposta-fav">${fav.r}</p>
+                        </div>
+                    </div>
+                `;
+
+                lista.appendChild(card);
+            });
+        }
+
+        // ── Toggle resposta ──
+        function toggleResp(idx) {
+            const area  = document.getElementById('area-' + idx);
+            const btn   = document.getElementById('btn-' + idx);
+            const aberta = area.classList.toggle('aberta');
+            btn.textContent = aberta ? '🙈 Esconder resposta' : '👀 Ver resposta';
+        }
+
+        // ── Remover um favorito ──
+        function remover(idxReal) {
+            favoritos.splice(idxReal, 1);
+            localStorage.setItem('charadaoFavoritos', JSON.stringify(favoritos));
+            toast('💔 Charada removida dos favoritos');
+            renderizarFiltros();
+            renderizarLista();
+        }
+
+        // ── Limpar todos ──
+        function limparTodos() {
+            localStorage.removeItem('charadaoFavoritos');
+            favoritos   = [];
+            filtroAtivo = 'todos';
+            fecharModal();
+            toast('🗑 Todos os favoritos foram removidos');
+            renderizarFiltros();
+            renderizarLista();
+        }
+
+        // ── Modal ──
+        function abrirModal() {
+            if (favoritos.length === 0) { toast('Você não tem favoritos para limpar!'); return; }
+            document.getElementById('modal').classList.add('ativo');
+        }
+
+        function fecharModal() {
+            document.getElementById('modal').classList.remove('ativo');
+        }
+
+        function fecharSeForaDoBox(e) {
+            if (e.target === document.getElementById('modal')) fecharModal();
+        }
+
+        // ── Toast ──
+        function toast(msg) {
+            const el = document.getElementById('toast');
+            el.textContent = msg;
+            el.classList.add('visivel');
+            setTimeout(() => el.classList.remove('visivel'), 2400);
+        }
+    </script>
+
+</body>
+</html>

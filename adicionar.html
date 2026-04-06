@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔥 CHARADÃO - Adicionar Charada</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #4c1d95, #000000, #831843);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── Cabeçalho ── */
+        .cabecalho {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 22px 20px 18px;
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .btn-voltar {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background 0.2s;
+            flex-shrink: 0;
+        }
+
+        .btn-voltar:hover { background: rgba(255,255,255,0.18); }
+
+        .cabecalho-centro {
+            text-align: center;
+            flex: 1;
+        }
+
+        .cabecalho-centro h1 { font-size: 1.25rem; font-weight: 700; }
+
+        .cabecalho-centro p {
+            font-size: 0.72rem;
+            color: #a78bfa;
+            margin-top: 2px;
+        }
+
+        .btn-minhas {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.18);
+            color: #c4b5fd;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 8px 13px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .btn-minhas:hover { background: rgba(255,255,255,0.16); color: white; }
+
+        /* ── Conteúdo ── */
+        .conteudo {
+            flex: 1;
+            max-width: 560px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 28px 18px 60px;
+        }
+
+        /* ── Abas ── */
+        .abas {
+            display: flex;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 16px;
+            padding: 5px;
+            margin-bottom: 28px;
+            gap: 4px;
+        }
+
+        .aba {
+            flex: 1;
+            padding: 11px;
+            background: none;
+            border: none;
+            border-radius: 12px;
+            color: #a78bfa;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .aba.ativa {
+            background: linear-gradient(135deg, #ff00aa, #c026d3);
+            color: white;
+        }
+
+        .aba:not(.ativa):hover { color: white; background: rgba(255,255,255,0.08); }
+
+        /* ── Painel criar ── */
+        .painel { display: none; }
+        .painel.ativo { display: block; }
+
+        /* ── Formulário ── */
+        .form-grupo {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #c4b5fd;
+            margin-bottom: 8px;
+            letter-spacing: 0.3px;
+        }
+
+        .form-label span {
+            color: #ff00aa;
+            margin-left: 3px;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.16);
+            border-radius: 16px;
+            padding: 15px 18px;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s, background 0.2s;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        .form-input::placeholder,
+        .form-textarea::placeholder { color: rgba(255,255,255,0.3); }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            border-color: rgba(255,0,170,0.5);
+            background: rgba(255,255,255,0.11);
+        }
+
+        .form-textarea {
+            resize: none;
+            min-height: 110px;
+            line-height: 1.55;
+        }
+
+        .form-select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23a78bfa' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 18px center;
+            padding-right: 44px;
+            cursor: pointer;
+        }
+
+        .form-select option {
+            background: #1e1b4b;
+            color: white;
+        }
+
+        /* Contador de caracteres */
+        .contador-chars {
+            text-align: right;
+            font-size: 0.7rem;
+            color: #7c3aed;
+            margin-top: 6px;
+        }
+
+        .contador-chars.quase { color: #f59e0b; }
+        .contador-chars.limite { color: #ef4444; }
+
+        /* ── Preview ── */
+        .preview-titulo {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #a78bfa;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .preview-titulo hr {
+            flex: 1;
+            border: none;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .card-preview {
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.14);
+            border-radius: 20px;
+            padding: 22px 20px;
+            margin-bottom: 24px;
+            min-height: 80px;
+        }
+
+        .preview-pergunta {
+            font-size: 1rem;
+            font-weight: 600;
+            line-height: 1.55;
+            color: rgba(255,255,255,0.5);
+            font-style: italic;
+        }
+
+        .preview-pergunta.preenchida {
+            color: white;
+            font-style: normal;
+        }
+
+        .preview-resposta-area {
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: none;
+        }
+
+        .preview-resposta-area.visivel { display: block; }
+
+        .preview-label-resp {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: #34d399;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .preview-texto-resp {
+            font-size: 0.92rem;
+            font-weight: 700;
+            background: rgba(52,211,153,0.1);
+            border: 1px solid rgba(52,211,153,0.25);
+            border-radius: 12px;
+            padding: 10px 14px;
+        }
+
+        /* ── Botão salvar ── */
+        .btn-salvar {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, #ff00aa, #c026d3);
+            color: white;
+            border: none;
+            border-radius: 18px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.08rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(255,0,170,0.35);
+            transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+        }
+
+        .btn-salvar:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(255,0,170,0.48); }
+        .btn-salvar:active { transform: scale(0.97); }
+        .btn-salvar:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        /* ── Painel: minhas charadas ── */
+        .lista-minhas {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .card-minha {
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 20px;
+            padding: 18px 18px 14px;
+            animation: surgir 0.3s ease forwards;
+            opacity: 0;
+        }
+
+        @keyframes surgir {
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .minha-topo {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .badge-cat-minha {
+            background: rgba(99,102,241,0.2);
+            border: 1px solid rgba(99,102,241,0.35);
+            color: #a5b4fc;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 50px;
+            letter-spacing: 0.4px;
+        }
+
+        .badge-custom {
+            background: rgba(255,0,170,0.15);
+            border: 1px solid rgba(255,0,170,0.3);
+            color: #f9a8d4;
+            font-size: 0.6rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 50px;
+        }
+
+        .btn-excluir-minha {
+            background: rgba(220,38,38,0.12);
+            border: 1px solid rgba(220,38,38,0.25);
+            color: #fca5a5;
+            font-size: 0.85rem;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .btn-excluir-minha:hover { background: rgba(220,38,38,0.28); transform: scale(1.1); }
+
+        .minha-pergunta {
+            font-size: 0.92rem;
+            font-weight: 600;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .minha-resposta {
+            font-size: 0.82rem;
+            color: #34d399;
+            background: rgba(52,211,153,0.08);
+            border: 1px solid rgba(52,211,153,0.2);
+            border-radius: 10px;
+            padding: 8px 12px;
+        }
+
+        .minha-data {
+            font-size: 0.68rem;
+            color: #6d28d9;
+            margin-top: 10px;
+        }
+
+        /* Tela vazia minhas charadas */
+        .vazio-minhas {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .vazio-minhas span { font-size: 4rem; display: block; margin-bottom: 16px; }
+        .vazio-minhas h2 { font-size: 1.3rem; margin-bottom: 10px; }
+
+        .vazio-minhas p {
+            color: #a78bfa;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* ── Modal sucesso ── */
+        .modal-fundo {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.82);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 100;
+        }
+
+        .modal-fundo.ativo { display: flex; }
+
+        .modal-sucesso {
+            background: linear-gradient(135deg, #1e1b4b, #14532d);
+            border: 1px solid rgba(52,211,153,0.3);
+            border-radius: 28px;
+            padding: 40px 28px;
+            max-width: 340px;
+            width: 100%;
+            text-align: center;
+            animation: surgir 0.3s ease;
+        }
+
+        .modal-sucesso .icone { font-size: 4rem; margin-bottom: 14px; }
+        .modal-sucesso h2 { font-size: 1.4rem; margin-bottom: 8px; }
+        .modal-sucesso p { color: #a7f3d0; font-size: 0.9rem; line-height: 1.5; margin-bottom: 28px; }
+
+        .modal-botoes-suc { display: flex; flex-direction: column; gap: 10px; }
+
+        .btn-ver-minhas {
+            padding: 15px;
+            background: rgba(52,211,153,0.2);
+            border: 1px solid rgba(52,211,153,0.35);
+            color: #34d399;
+            border-radius: 14px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem; font-weight: 700; cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-ver-minhas:hover { background: rgba(52,211,153,0.3); }
+
+        .btn-adicionar-mais {
+            padding: 15px;
+            background: linear-gradient(135deg, #ff00aa, #c026d3);
+            color: white; border: none; border-radius: 14px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem; font-weight: 700; cursor: pointer;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 28px;
+            left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: rgba(20,10,50,0.96);
+            border: 1px solid rgba(255,0,170,0.35);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            z-index: 500;
+            transition: transform 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .toast.visivel { transform: translateX(-50%) translateY(0); }
+
+        @media (max-width: 380px) {
+            .form-textarea { min-height: 90px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Cabeçalho -->
+    <div class="cabecalho">
+        <button class="btn-voltar" onclick="window.location.href='principal.html'">← Voltar</button>
+        <div class="cabecalho-centro">
+            <h1>➕ Adicionar Charada</h1>
+            <p id="subtitulo-cab">Crie suas próprias charadas</p>
+        </div>
+        <button class="btn-minhas" onclick="mudarAba('minhas')">📋 Minhas</button>
+    </div>
+
+    <!-- Conteúdo -->
+    <div class="conteudo">
+
+        <!-- Abas -->
+        <div class="abas">
+            <button class="aba ativa" id="aba-criar" onclick="mudarAba('criar')">✏️ Criar nova</button>
+            <button class="aba" id="aba-minhas" onclick="mudarAba('minhas')">📋 Minhas charadas</button>
+        </div>
+
+        <!-- ── PAINEL CRIAR ── -->
+        <div class="painel ativo" id="painel-criar">
+
+            <!-- Categoria -->
+            <div class="form-grupo">
+                <label class="form-label">Categoria <span>*</span></label>
+                <select class="form-select" id="campo-categoria">
+                    <option value="">Selecione uma categoria...</option>
+                    <option value="classicas">🧠 Clássicas</option>
+                    <option value="animais">🦁 Animais</option>
+                    <option value="comida">🍕 Comida</option>
+                    <option value="objetos">📦 Objetos</option>
+                    <option value="tecnologia">💻 Tecnologia</option>
+                    <option value="reflexivas">🤔 Reflexivas</option>
+                    <option value="engracadas">😂 Engraçadas</option>
+                    <option value="espaco">🌌 Espaço</option>
+                    <option value="natureza">🌳 Natureza</option>
+                    <option value="musica">🎵 Música</option>
+                    <option value="cinema">🎬 Cinema & Séries</option>
+                    <option value="animes">⛩️ Animes</option>
+                    <option value="programacao">👨‍💻 Programação</option>
+                </select>
+            </div>
+
+            <!-- Pergunta -->
+            <div class="form-grupo">
+                <label class="form-label">Sua charada <span>*</span></label>
+                <textarea
+                    class="form-textarea"
+                    id="campo-pergunta"
+                    placeholder="Ex: O que é, o que é? Tem pescoço mas não tem cabeça..."
+                    maxlength="300"
+                    oninput="atualizarPreview(); contarChars('campo-pergunta', 'contador-pergunta', 300)"
+                ></textarea>
+                <p class="contador-chars" id="contador-pergunta">0 / 300</p>
+            </div>
+
+            <!-- Resposta -->
+            <div class="form-grupo">
+                <label class="form-label">Resposta <span>*</span></label>
+                <input
+                    type="text"
+                    class="form-input"
+                    id="campo-resposta"
+                    placeholder="Ex: A garrafa"
+                    maxlength="120"
+                    oninput="atualizarPreview(); contarChars('campo-resposta', 'contador-resposta', 120)"
+                >
+                <p class="contador-chars" id="contador-resposta">0 / 120</p>
+            </div>
+
+            <!-- Dificuldade -->
+            <div class="form-grupo">
+                <label class="form-label">Nível de dificuldade</label>
+                <select class="form-select" id="campo-dificuldade">
+                    <option value="facil">😊 Fácil — qualquer um acerta</option>
+                    <option value="medio" selected>🤔 Médio — precisa pensar</option>
+                    <option value="dificil">🔥 Difícil — vai fazer a galera suar</option>
+                </select>
+            </div>
+
+            <!-- Preview -->
+            <div class="preview-titulo">
+                <span>PRÉVIA</span><hr>
+            </div>
+
+            <div class="card-preview">
+                <p class="preview-pergunta" id="preview-pergunta">
+                    Sua charada vai aparecer aqui...
+                </p>
+                <div class="preview-resposta-area" id="preview-resposta-area">
+                    <p class="preview-label-resp">✅ RESPOSTA</p>
+                    <p class="preview-texto-resp" id="preview-resposta"></p>
+                </div>
+            </div>
+
+            <!-- Botão salvar -->
+            <button class="btn-salvar" id="btn-salvar" onclick="salvarCharada()" disabled>
+                🚀 SALVAR MINHA CHARADA NO JOGO
+            </button>
+
+        </div>
+
+        <!-- ── PAINEL MINHAS CHARADAS ── -->
+        <div class="painel" id="painel-minhas">
+            <div class="lista-minhas" id="lista-minhas">
+                <!-- Preenchido pelo JS -->
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Modal sucesso -->
+    <div class="modal-fundo" id="modal-sucesso">
+        <div class="modal-sucesso">
+            <div class="icone">🎉</div>
+            <h2>Charada salva!</h2>
+            <p>Sua charada foi adicionada ao jogo com sucesso! Ela vai aparecer quando você jogar essa categoria.</p>
+            <div class="modal-botoes-suc">
+                <button class="btn-ver-minhas" onclick="modalVerMinhas()">📋 Ver minhas charadas</button>
+                <button class="btn-adicionar-mais" onclick="fecharModalSucesso()">➕ Adicionar mais uma</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // ── Inicialização ──
+        window.onload = function () {
+            if (!localStorage.getItem('charadaoNome')) {
+                window.location.href = 'index.html';
+                return;
+            }
+            atualizarSubtitulo();
+        };
+
+        // ── Abas ──
+        function mudarAba(aba) {
+            document.getElementById('painel-criar').classList.remove('ativo');
+            document.getElementById('painel-minhas').classList.remove('ativo');
+            document.getElementById('aba-criar').classList.remove('ativa');
+            document.getElementById('aba-minhas').classList.remove('ativa');
+
+            document.getElementById('painel-' + aba).classList.add('ativo');
+            document.getElementById('aba-' + aba).classList.add('ativa');
+
+            if (aba === 'minhas') renderizarMinhas();
+        }
+
+        // ── Preview em tempo real ──
+        function atualizarPreview() {
+            const pergunta  = document.getElementById('campo-pergunta').value.trim();
+            const resposta  = document.getElementById('campo-resposta').value.trim();
+            const prevPerg  = document.getElementById('preview-pergunta');
+            const prevResp  = document.getElementById('preview-resposta-area');
+            const prevTexto = document.getElementById('preview-resposta');
+            const btnSalvar = document.getElementById('btn-salvar');
+            const categoria = document.getElementById('campo-categoria').value;
+
+            // Pergunta
+            if (pergunta) {
+                prevPerg.textContent = pergunta;
+                prevPerg.classList.add('preenchida');
+            } else {
+                prevPerg.textContent = 'Sua charada vai aparecer aqui...';
+                prevPerg.classList.remove('preenchida');
+            }
+
+            // Resposta
+            if (resposta) {
+                prevTexto.textContent = resposta;
+                prevResp.classList.add('visivel');
+            } else {
+                prevResp.classList.remove('visivel');
+            }
+
+            // Habilitar botão salvar
+            btnSalvar.disabled = !(pergunta && resposta && categoria);
+        }
+
+        // ── Contador de caracteres ──
+        function contarChars(campoId, contadorId, max) {
+            const campo    = document.getElementById(campoId);
+            const contador = document.getElementById(contadorId);
+            const atual    = campo.value.length;
+
+            contador.textContent = atual + ' / ' + max;
+            contador.classList.remove('quase', 'limite');
+
+            if (atual >= max) contador.classList.add('limite');
+            else if (atual >= max * 0.8) contador.classList.add('quase');
+        }
+
+        // ── Salvar charada ──
+        function salvarCharada() {
+            const pergunta    = document.getElementById('campo-pergunta').value.trim();
+            const resposta    = document.getElementById('campo-resposta').value.trim();
+            const categoria   = document.getElementById('campo-categoria').value;
+            const dificuldade = document.getElementById('campo-dificuldade').value;
+            const autor       = localStorage.getItem('charadaoNome') || 'Anônimo';
+
+            if (!pergunta || !resposta || !categoria) {
+                toast('⚠️ Preencha todos os campos obrigatórios!');
+                return;
+            }
+
+            // Buscar charadas existentes
+            const custom = JSON.parse(localStorage.getItem('charadaoCustom')) || [];
+
+            // Verificar duplicata
+            const jaExiste = custom.some(c =>
+                c.pergunta.toLowerCase() === pergunta.toLowerCase()
+            );
+
+            if (jaExiste) {
+                toast('⚠️ Essa charada já existe na sua lista!');
+                return;
+            }
+
+            // Salvar
+            custom.push({
+                id:          Date.now(),
+                pergunta,
+                resposta,
+                categoria,
+                dificuldade,
+                autor,
+                data:        new Date().toLocaleDateString('pt-BR'),
+                dataISO:     new Date().toISOString()
+            });
+
+            localStorage.setItem('charadaoCustom', JSON.stringify(custom));
+
+            // Limpar formulário
+            document.getElementById('campo-pergunta').value   = '';
+            document.getElementById('campo-resposta').value   = '';
+            document.getElementById('campo-categoria').value  = '';
+            document.getElementById('campo-dificuldade').value = 'medio';
+            document.getElementById('contador-pergunta').textContent = '0 / 300';
+            document.getElementById('contador-resposta').textContent = '0 / 120';
+            atualizarPreview();
+            atualizarSubtitulo();
+
+            // Mostrar modal de sucesso
+            document.getElementById('modal-sucesso').classList.add('ativo');
+        }
+
+        // ── Renderizar minhas charadas ──
+        function renderizarMinhas() {
+            const lista  = document.getElementById('lista-minhas');
+            const custom = JSON.parse(localStorage.getItem('charadaoCustom')) || [];
+
+            lista.innerHTML = '';
+            atualizarSubtitulo();
+
+            if (custom.length === 0) {
+                lista.innerHTML = `
+                    <div class="vazio-minhas">
+                        <span>✏️</span>
+                        <h2>Nenhuma charada ainda!</h2>
+                        <p>Crie sua primeira charada na aba "Criar nova" e ela vai aparecer aqui e no jogo automaticamente!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Ordenar da mais recente para a mais antiga
+            const ordenadas = [...custom].sort((a, b) => b.id - a.id);
+
+            const iconesDif = { facil: '😊', medio: '🤔', dificil: '🔥' };
+            const nomeCats  = {
+                classicas: '🧠 Clássicas', animais: '🦁 Animais', comida: '🍕 Comida',
+                objetos: '📦 Objetos', tecnologia: '💻 Tecnologia', reflexivas: '🤔 Reflexivas',
+                engracadas: '😂 Engraçadas', espaco: '🌌 Espaço', natureza: '🌳 Natureza',
+                musica: '🎵 Música', cinema: '🎬 Cinema & Séries', animes: '⛩️ Animes'
+            };
+
+            ordenadas.forEach((c, idx) => {
+                const idxReal = custom.findIndex(x => x.id === c.id);
+                const card    = document.createElement('div');
+                card.className = 'card-minha';
+                card.style.animationDelay = (idx * 0.05) + 's';
+
+                card.innerHTML = `
+                    <div class="minha-topo">
+                        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+                            <span class="badge-cat-minha">${nomeCats[c.categoria] || c.categoria}</span>
+                            <span class="badge-custom">✨ Minha</span>
+                            <span style="font-size:0.7rem;color:#7c3aed;">${iconesDif[c.dificuldade] || '🤔'} ${c.dificuldade || 'médio'}</span>
+                        </div>
+                        <button class="btn-excluir-minha" onclick="excluirMinha(${idxReal})" title="Excluir">✕</button>
+                    </div>
+                    <p class="minha-pergunta">${c.pergunta}</p>
+                    <p class="minha-resposta">✅ ${c.resposta}</p>
+                    <p class="minha-data">📅 Criada em ${c.data || 'data desconhecida'} por ${c.autor || 'você'}</p>
+                `;
+
+                lista.appendChild(card);
+            });
+        }
+
+        // ── Excluir minha charada ──
+        function excluirMinha(idx) {
+            const custom = JSON.parse(localStorage.getItem('charadaoCustom')) || [];
+            custom.splice(idx, 1);
+            localStorage.setItem('charadaoCustom', JSON.stringify(custom));
+            toast('🗑 Charada excluída');
+            renderizarMinhas();
+        }
+
+        // ── Atualizar subtítulo ──
+        function atualizarSubtitulo() {
+            const custom = JSON.parse(localStorage.getItem('charadaoCustom')) || [];
+            const sub    = document.getElementById('subtitulo-cab');
+            sub.textContent = custom.length === 0
+                ? 'Crie suas próprias charadas'
+                : custom.length + (custom.length === 1 ? ' charada criada por você' : ' charadas criadas por você');
+        }
+
+        // ── Modal sucesso ──
+        function modalVerMinhas() {
+            fecharModalSucesso();
+            mudarAba('minhas');
+        }
+
+        function fecharModalSucesso() {
+            document.getElementById('modal-sucesso').classList.remove('ativo');
+        }
+
+        // ── Toast ──
+        function toast(msg) {
+            const el = document.getElementById('toast');
+            el.textContent = msg;
+            el.classList.add('visivel');
+            setTimeout(() => el.classList.remove('visivel'), 2500);
+        }
+
+        // Atualizar preview quando categoria muda
+        document.getElementById('campo-categoria').addEventListener('change', atualizarPreview);
+    </script>
+
+</body>
+</html>

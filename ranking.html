@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔥 CHARADÃO - Ranking</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #4c1d95, #000000, #831843);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Cabeçalho */
+        .cabecalho {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 22px 22px 18px;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .btn-voltar {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-voltar:hover { background: rgba(255, 255, 255, 0.18); }
+
+        .cabecalho-centro {
+            text-align: center;
+        }
+
+        .cabecalho-centro h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .cabecalho-centro p {
+            font-size: 0.72rem;
+            color: #a78bfa;
+            margin-top: 2px;
+        }
+
+        .btn-limpar {
+            background: rgba(220, 38, 38, 0.15);
+            border: 1px solid rgba(220, 38, 38, 0.35);
+            color: #fca5a5;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 600;
+            padding: 8px 14px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-limpar:hover { background: rgba(220, 38, 38, 0.28); }
+
+        /* Conteúdo */
+        .conteudo {
+            flex: 1;
+            max-width: 560px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 28px 20px 40px;
+        }
+
+        /* Pódio top 3 */
+        .podio {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 36px;
+        }
+
+        .podio-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            max-width: 130px;
+        }
+
+        .podio-avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .podio-1 .podio-avatar {
+            width: 64px;
+            height: 64px;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
+        }
+
+        .podio-2 .podio-avatar {
+            background: linear-gradient(135deg, #94a3b8, #64748b);
+            box-shadow: 0 0 14px rgba(148, 163, 184, 0.3);
+        }
+
+        .podio-3 .podio-avatar {
+            background: linear-gradient(135deg, #cd7c3a, #a0522d);
+            box-shadow: 0 0 14px rgba(205, 124, 58, 0.3);
+        }
+
+        .podio-nome {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-align: center;
+            max-width: 100px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .podio-pontos {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #f59e0b;
+        }
+
+        .podio-2 .podio-pontos,
+        .podio-3 .podio-pontos {
+            font-size: 0.9rem;
+            color: #c4b5fd;
+        }
+
+        .podio-base {
+            border-radius: 12px 12px 0 0;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .podio-1 .podio-base {
+            background: linear-gradient(135deg, rgba(245,158,11,0.25), rgba(217,119,6,0.15));
+            border: 1px solid rgba(245, 158, 11, 0.35);
+            height: 70px;
+        }
+
+        .podio-2 .podio-base {
+            background: linear-gradient(135deg, rgba(148,163,184,0.15), rgba(100,116,139,0.1));
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            height: 50px;
+        }
+
+        .podio-3 .podio-base {
+            background: linear-gradient(135deg, rgba(205,124,58,0.15), rgba(160,82,45,0.1));
+            border: 1px solid rgba(205, 124, 58, 0.25);
+            height: 36px;
+        }
+
+        /* Divisor */
+        .divisor-lista {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .divisor-lista hr {
+            flex: 1;
+            border: none;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .divisor-lista span {
+            font-size: 0.75rem;
+            color: #7c3aed;
+            white-space: nowrap;
+        }
+
+        /* Lista completa */
+        .lista-ranking {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .item-ranking {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 18px;
+            padding: 14px 18px;
+            transition: background 0.2s;
+        }
+
+        .item-ranking:hover { background: rgba(255, 255, 255, 0.11); }
+
+        .item-ranking.meu-score {
+            border-color: rgba(255, 0, 170, 0.45);
+            background: rgba(255, 0, 170, 0.08);
+        }
+
+        .posicao {
+            font-size: 1rem;
+            font-weight: 700;
+            min-width: 28px;
+            text-align: center;
+            color: #a78bfa;
+        }
+
+        .posicao.ouro   { color: #f59e0b; font-size: 1.2rem; }
+        .posicao.prata  { color: #94a3b8; font-size: 1.2rem; }
+        .posicao.bronze { color: #cd7c3a; font-size: 1.2rem; }
+
+        .avatar-mini {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #7c3aed, #c026d3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .item-ranking.meu-score .avatar-mini {
+            background: linear-gradient(135deg, #ff00aa, #c026d3);
+        }
+
+        .info-jogador {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .nome-jogador {
+            font-size: 0.95rem;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .meta-jogador {
+            font-size: 0.72rem;
+            color: #a78bfa;
+            margin-top: 2px;
+        }
+
+        .item-ranking.meu-score .meta-jogador {
+            color: #f0abfc;
+        }
+
+        .pontos-item {
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .valor-pontos-item {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #f59e0b;
+        }
+
+        .label-pontos-item {
+            font-size: 0.65rem;
+            color: #7c3aed;
+        }
+
+        /* Tela vazia */
+        .tela-vazia {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .tela-vazia .icone {
+            font-size: 4rem;
+            margin-bottom: 16px;
+        }
+
+        .tela-vazia h2 {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+        }
+
+        .tela-vazia p {
+            color: #a78bfa;
+            font-size: 0.95rem;
+            margin-bottom: 28px;
+            line-height: 1.5;
+        }
+
+        .btn-jogar-agora {
+            display: inline-block;
+            padding: 16px 32px;
+            background: linear-gradient(135deg, #ff00aa, #c026d3);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(255, 0, 170, 0.35);
+            transition: transform 0.2s;
+        }
+
+        .btn-jogar-agora:hover { transform: translateY(-2px); }
+
+        /* Modal confirmar limpeza */
+        .modal-fundo {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 100;
+        }
+
+        .modal-fundo.ativo { display: flex; }
+
+        .modal-box {
+            background: linear-gradient(135deg, #1e1b4b, #4a044e);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 28px;
+            padding: 36px 28px;
+            max-width: 340px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .modal-box h2 { font-size: 1.3rem; margin-bottom: 10px; }
+
+        .modal-box p {
+            color: #c4b5fd;
+            font-size: 0.9rem;
+            margin-bottom: 28px;
+            line-height: 1.5;
+        }
+
+        .modal-botoes { display: flex; gap: 10px; }
+
+        .btn-cancelar-modal {
+            flex: 1;
+            padding: 14px;
+            background: rgba(255,255,255,0.08);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.18);
+            border-radius: 14px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-confirmar-limpar {
+            flex: 1;
+            padding: 14px;
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        /* Badge "você" */
+        .badge-voce {
+            background: linear-gradient(135deg, #ff00aa, #c026d3);
+            color: white;
+            font-size: 0.6rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 50px;
+            margin-left: 6px;
+            vertical-align: middle;
+        }
+
+        /* Responsivo */
+        @media (max-width: 360px) {
+            .podio-avatar { width: 44px; height: 44px; font-size: 1.1rem; }
+            .podio-1 .podio-avatar { width: 54px; height: 54px; }
+            .podio-nome { font-size: 0.72rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Cabeçalho -->
+    <div class="cabecalho">
+        <button class="btn-voltar" onclick="window.location.href='principal.html'">← Voltar</button>
+        <div class="cabecalho-centro">
+            <h1>🏆 Ranking</h1>
+            <p>Os maiores mestres do Charadão</p>
+        </div>
+        <button class="btn-limpar" onclick="abrirModalLimpar()">🗑 Limpar</button>
+    </div>
+
+    <!-- Conteúdo -->
+    <div class="conteudo" id="conteudo-ranking">
+        <!-- Preenchido pelo JavaScript -->
+    </div>
+
+    <!-- Modal confirmar limpeza -->
+    <div class="modal-fundo" id="modal-limpar" onclick="fecharModalSeForaDoBox(event)">
+        <div class="modal-box">
+            <h2>⚠️ Limpar Ranking?</h2>
+            <p>Todos os scores serão apagados permanentemente. Essa ação não pode ser desfeita!</p>
+            <div class="modal-botoes">
+                <button class="btn-cancelar-modal" onclick="fecharModalLimpar()">Cancelar</button>
+                <button class="btn-confirmar-limpar" onclick="limparRanking()">Apagar tudo</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const nomeJogador = localStorage.getItem('charadaoNome') || '';
+
+        // ── Inicialização ──
+        window.onload = function () {
+            if (!nomeJogador) {
+                window.location.href = 'index.html';
+                return;
+            }
+            renderizarRanking();
+        };
+
+        // ── Renderizar ranking ──
+        function renderizarRanking() {
+            const ranking   = JSON.parse(localStorage.getItem('charadaoRanking')) || [];
+            const conteudo  = document.getElementById('conteudo-ranking');
+
+            if (ranking.length === 0) {
+                conteudo.innerHTML = `
+                    <div class="tela-vazia">
+                        <div class="icone">🏆</div>
+                        <h2>Nenhum score ainda!</h2>
+                        <p>Jogue uma partida e salve seu score para aparecer aqui e desafiar seus colegas!</p>
+                        <button class="btn-jogar-agora" onclick="window.location.href='categorias.html'">
+                            ⚡ Jogar agora
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            // Pódio (top 3)
+            const top3  = ranking.slice(0, 3);
+            const resto = ranking.slice(3);
+
+            // Monta o pódio na ordem: 2º, 1º, 3º
+            const ordemPodio = [];
+            if (top3[1]) ordemPodio.push({ ...top3[1], pos: 2 });
+            if (top3[0]) ordemPodio.push({ ...top3[0], pos: 1 });
+            if (top3[2]) ordemPodio.push({ ...top3[2], pos: 3 });
+
+            const medalhas  = { 1: '🥇', 2: '🥈', 3: '🥉' };
+            const classePos = { 1: 'podio-1', 2: 'podio-2', 3: 'podio-3' };
+
+            let podioHTML = '<div class="podio">';
+            ordemPodio.forEach(item => {
+                const iniciais = inicialDoNome(item.nome);
+                const eVoce    = item.nome === nomeJogador;
+                podioHTML += `
+                    <div class="podio-item ${classePos[item.pos]}">
+                        <div class="podio-avatar">${iniciais}</div>
+                        <p class="podio-nome">${item.nome}${eVoce ? ' 👤' : ''}</p>
+                        <p class="podio-pontos">${item.pontos} pts</p>
+                        <div class="podio-base">${medalhas[item.pos]}</div>
+                    </div>
+                `;
+            });
+            podioHTML += '</div>';
+
+            // Lista completa
+            let listaHTML = '';
+
+            if (resto.length > 0) {
+                listaHTML += `
+                    <div class="divisor-lista">
+                        <hr><span>classificação completa</span><hr>
+                    </div>
+                    <div class="lista-ranking">
+                `;
+
+                resto.forEach((item, idx) => {
+                    const posicao   = idx + 4;
+                    const iniciais  = inicialDoNome(item.nome);
+                    const eVoce     = item.nome === nomeJogador;
+                    const pct       = item.total ? Math.round((item.acertos / item.total) * 100) : 0;
+
+                    listaHTML += `
+                        <div class="item-ranking ${eVoce ? 'meu-score' : ''}">
+                            <span class="posicao">${posicao}º</span>
+                            <div class="avatar-mini">${iniciais}</div>
+                            <div class="info-jogador">
+                                <p class="nome-jogador">
+                                    ${item.nome}
+                                    ${eVoce ? '<span class="badge-voce">VOCÊ</span>' : ''}
+                                </p>
+                                <p class="meta-jogador">
+                                    ${item.acertos || 0}/${item.total || 10} acertos • ${pct}% • ${item.categoria || 'Geral'} • ${item.data || ''}
+                                </p>
+                            </div>
+                            <div class="pontos-item">
+                                <p class="valor-pontos-item">${item.pontos}</p>
+                                <p class="label-pontos-item">pontos</p>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                listaHTML += '</div>';
+            }
+
+            // Também mostrar top 3 na lista com seus dados completos
+            let listaTop3HTML = `
+                <div class="divisor-lista">
+                    <hr><span>todos os resultados</span><hr>
+                </div>
+                <div class="lista-ranking">
+            `;
+
+            ranking.forEach((item, idx) => {
+                const posicao   = idx + 1;
+                const iniciais  = inicialDoNome(item.nome);
+                const eVoce     = item.nome === nomeJogador;
+                const pct       = item.total ? Math.round((item.acertos / item.total) * 100) : 0;
+
+                let classePos2 = '';
+                let textoPos   = posicao + 'º';
+                if (posicao === 1) { classePos2 = 'ouro';   textoPos = '🥇'; }
+                if (posicao === 2) { classePos2 = 'prata';  textoPos = '🥈'; }
+                if (posicao === 3) { classePos2 = 'bronze'; textoPos = '🥉'; }
+
+                listaTop3HTML += `
+                    <div class="item-ranking ${eVoce ? 'meu-score' : ''}">
+                        <span class="posicao ${classePos2}">${textoPos}</span>
+                        <div class="avatar-mini">${iniciais}</div>
+                        <div class="info-jogador">
+                            <p class="nome-jogador">
+                                ${item.nome}
+                                ${eVoce ? '<span class="badge-voce">VOCÊ</span>' : ''}
+                            </p>
+                            <p class="meta-jogador">
+                                ${item.acertos || 0}/${item.total || 10} acertos • ${pct}% • ${item.categoria || 'Geral'} • ${item.data || ''}
+                            </p>
+                        </div>
+                        <div class="pontos-item">
+                            <p class="valor-pontos-item">${item.pontos}</p>
+                            <p class="label-pontos-item">pontos</p>
+                        </div>
+                    </div>
+                `;
+            });
+
+            listaTop3HTML += '</div>';
+
+            conteudo.innerHTML = podioHTML + listaTop3HTML;
+        }
+
+        // ── Utilitários ──
+        function inicialDoNome(nome) {
+            if (!nome) return '?';
+            const partes = nome.trim().split(' ');
+            if (partes.length >= 2) {
+                return (partes[0][0] + partes[1][0]).toUpperCase();
+            }
+            return nome.slice(0, 2).toUpperCase();
+        }
+
+        // ── Modal limpar ──
+        function abrirModalLimpar() {
+            document.getElementById('modal-limpar').classList.add('ativo');
+        }
+
+        function fecharModalLimpar() {
+            document.getElementById('modal-limpar').classList.remove('ativo');
+        }
+
+        function fecharModalSeForaDoBox(e) {
+            if (e.target === document.getElementById('modal-limpar')) fecharModalLimpar();
+        }
+
+        function limparRanking() {
+            localStorage.removeItem('charadaoRanking');
+            fecharModalLimpar();
+            renderizarRanking();
+        }
+    </script>
+
+</body>
+</html>
